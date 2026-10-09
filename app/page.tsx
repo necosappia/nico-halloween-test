@@ -9,7 +9,7 @@ function NextSteps({level}:{level:string}){
   <div className="notice"><h3>Practicá desde tu casa o donde estés</h3><p>Conocé el curso online Aprende Patinando.</p><a className="primary full" href="https://nicosappia.org/compra" target="_blank" rel="noopener noreferrer">Ver curso online <span>↗</span></a></div>
   <h2>Encontrá tu próxima salida</h2>
   <div className="notice"><div className="eyebrow">NIVEL BÁSICO · INICIAL / PRINCIPIANTE</div><h3>Salida Urbana en Puerto Madero</h3><p>{level==='preparacion'?'Tu próximo objetivo: prepararte en clases para esta salida.':'Una salida para seguir ganando experiencia en la ciudad.'}</p><p>Fecha, horario y punto de encuentro: a confirmar.</p></div>
-  {level==='urbana'&&<div className="notice"><div className="eyebrow">NIVEL INTERMEDIO · TEST APROBADO</div><h3>Salida Urbana Oficial de Halloween</h3><p><strong>31 de octubre de 2026 · 21:00 hs</strong><br/>Plaza Pizzurno</p><p>Según tus respuestas, alcanzaste el nivel del test para esta salida. La participación requiere la validación del profe indicada en tu resultado.</p></div>}
+  {level==='urbana'&&<div className="notice"><div className="eyebrow">NIVEL INTERMEDIO · TEST APROBADO</div><h3>Salida Urbana Oficial de Halloween</h3><p><strong>31 de octubre de 2026 · 21:00 hs</strong><br/>Plaza Pizzurno</p><p>Organiza: <a href="https://www.instagram.com/rolleada.de.halloween/" target="_blank" rel="noopener noreferrer" style={{color:"inherit",textDecoration:"underline"}}>@rolleada.de.halloween</a></p><p>Según tus respuestas, alcanzaste el nivel del test para esta salida. La participación requiere la validación del profe indicada en tu resultado.</p></div>}
  </section>;
 }
 export default function Home(){
