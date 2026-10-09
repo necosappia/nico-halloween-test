@@ -20,7 +20,7 @@ No es una certificación ni una autorización para patinar en la calle. El resul
 
 ## Recorrido del visitante
 
-1. Portada: “¿Listo para salir a patinar?”. Explica que el test tiene 14 preguntas, dura aproximadamente 3 minutos y es gratuito.
+1. Portada: “¿Listo para salir a patinar?”. Explica que el test tiene 16 preguntas, dura aproximadamente 3 minutos y es gratuito.
 2. Test: al tocar una respuesta avanza automáticamente tras una confirmación visual de 240 ms; puede volver y modificarla. No requiere pulsar un botón Siguiente.
 3. Resultado: preparación, salida primeros pasos o salida urbana. Se muestran habilidades y recomendaciones de equipo/mantenimiento.
 4. Regalo: “Accedé a una clase gratuita” o guía tutorial gratuita.
@@ -105,7 +105,7 @@ Estas propuestas describen la intención comercial. No hay mensajes automáticos
 
 ## Qué está implementado
 
-- Portada y encuesta interactiva con 14 preguntas.
+- Portada y encuesta interactiva con 16 preguntas.
 - Clasificación y recomendaciones individuales.
 - Logo transparente y foto de Halloween integrada con degradados.
 - Captación y persistencia de contactos en Supabase.
@@ -160,8 +160,18 @@ La versión de Sites permanece disponible. Esta carpeta contiene la versión sep
 
 El despliegue inicial puede hacerse desde los archivos. La conexión de GitHub permitirá desplegar cambios automáticamente al subir nuevos commits, una vez vinculado el repositorio.
 
-Los contactos registran `test_version` para interpretar el orden de las 14 respuestas. La respuesta visual correcta para bota rígida es «Ninguno» y no cambia el nivel técnico.
+Los contactos registran `test_version` para interpretar el orden de las 16 respuestas. La respuesta visual correcta para bota rígida es «Ninguno» y no cambia el nivel técnico.
 
 ## Pendientes de producto
 
 El video de Nico todavía no fue proporcionado. La guía escrita sigue disponible; la solicitud de clase requiere coordinación del equipo. WhatsApp, CRM, enlaces de compra, panel de contactos y política de privacidad completa siguen pendientes.
+
+## Actualización: reconocimiento de frenada
+
+Pregunta 15: «¿Qué frenada es esta?», con la imagen aportada por Nico. Opciones: Cuña, Freno en T, Freno de taco, No sé. Respuesta correcta: Cuña. Se muestra la corrección en el resultado; no modifica el nivel técnico. Versión de respuestas: `halloween-2026-v3-braking-15`.
+
+Para una base existente de 14 preguntas, ejecutar `supabase/actualizar-test-16.sql` antes de publicar. Para una instalación nueva usar `supabase/schema.sql`. La actualización SQL se entrega sin ejecutar; no se modificó ninguna web publicada ni base remota.
+
+Se regeneró package-lock.json para eliminar enlaces a carpetas externas del proyecto original. Verificación local: TypeScript y compilación de producción. No se probó el guardado contra una base remota.
+
+Pregunta 16: «¿Qué frenada es esta?». Imagen de patinadora con rollers amarillos, respuesta correcta: Frenada en T. No modifica el nivel técnico. Versión actual: halloween-2026-v4-braking-16. Para una base existente de 14 o 15 preguntas ejecutar solo actualizar-test-16.sql antes de publicar.

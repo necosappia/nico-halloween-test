@@ -1,0 +1,33 @@
+ACTUALIZACIÓN: 16 PREGUNTAS
+Las dos preguntas finales usan las imágenes de Nico. Respuestas correctas: Cuña y Frenada en T.
+Si ya creaste la tabla con la versión de 14 preguntas, ejecutá supabase/actualizar-test-16.sql antes de publicar. Conserva los registros anteriores. Para una base nueva, usá supabase/schema.sql.
+Esta actualización de base todavía no se ejecutó desde este chat.
+
+EMPEZÁ ACÁ — WEB DE HALLOWEEN DE NICO SAPPIA
+
+1. Descomprimí este ZIP. Contiene el proyecto Next.js completo con sus imágenes.
+2. Para Vercel: subí el contenido de la carpeta nico-halloween-test a un repositorio de GitHub e importalo en Vercel como Next.js. Comando de instalación: npm ci. Comando de compilación: npm run build.
+3. Configurá estas variables en el hosting:
+   SUPABASE_URL
+   SUPABASE_PUBLISHABLE_KEY
+   Usá los valores de tu proyecto Supabase. No los subas a GitHub.
+4. La tabla halloween_leads ya fue creada en el Supabase seleccionado durante esta conversación. Si usás otro proyecto, revisá y ejecutá supabase/schema.sql desde el editor SQL.
+5. Publicá y probá el test completo, incluyendo el envío del formulario. El guardado de contactos todavía requiere esta comprobación final.
+
+PARA OTRAS PLATAFORMAS
+Elegí una que soporte Next.js con servidor o Node.js. Instalación: npm ci. Compilación: npm run build. Inicio: npm start. Configurá las mismas variables de Supabase.
+Este proyecto tiene una API de servidor para guardar contactos: no alcanza con subirlo a un hosting de HTML estático.
+
+PARA VERLA EN TU COMPUTADORA
+Instalá Node.js compatible con Next.js 16 (20.9 o superior).
+Dentro de la carpeta ejecutá npm ci.
+Copiá .env.example como .env.local y completá las dos variables.
+Ejecutá npm run dev y abrí http://localhost:3000.
+
+INCLUYE
+Diseño Halloween, logo transparente, imágenes, 16 preguntas con avance automático, clasificación, formulario, guía gratuita, esquema SQL e información de la idea en README.md.
+
+NO INCLUYE
+Claves, contactos reales, dependencias instaladas ni archivos de compilación. Tampoco incluye el video de Nico, el panel de contactos, automatizaciones ni enlaces de compra, que siguen pendientes.
+
+Pregunta 16: «¿Qué frenada es esta?». Imagen de patinadora con rollers amarillos, respuesta correcta: Frenada en T. No modifica el nivel técnico. Versión actual: halloween-2026-v4-braking-16. Para una base existente de 14 o 15 preguntas ejecutar solo actualizar-test-16.sql antes de publicar.
