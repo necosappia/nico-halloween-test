@@ -175,3 +175,11 @@ Para una base existente de 14 preguntas, ejecutar `supabase/actualizar-test-16.s
 Se regeneró package-lock.json para eliminar enlaces a carpetas externas del proyecto original. Verificación local: TypeScript y compilación de producción. No se probó el guardado contra una base remota.
 
 Pregunta 16: «¿Qué frenada es esta?». Imagen de patinadora con rollers amarillos, respuesta correcta: Frenada en T. No modifica el nivel técnico. Versión actual: halloween-2026-v4-braking-16. Para una base existente de 14 o 15 preguntas ejecutar solo actualizar-test-16.sql antes de publicar.
+
+## Actualización: video gratis para aprender a frenar
+
+El regalo «tutorial» ahora es «Video gratis: aprendé a frenar». Al confirmar los datos se muestra el video de YouTube `w5Xq63DfPvU`, luego un espacio para el segundo video y un botón para comprar el curso completo (https://nicosappia.org/compra). El valor guardado en `gift` sigue siendo `tutorial`.
+
+Para agregar el segundo video, completar `NEXT_VIDEO_URL` al inicio de `app/page.tsx` con el enlace de YouTube.
+
+La base de Supabase solo aceptaba las versiones de 14 y 15 preguntas, por eso el formulario mostraba «No pudimos guardar tu solicitud». Se aplicó `actualizar-test-16.sql` (ajustado al nombre real de la versión 15, `halloween-2026-v3-brake-15`).
