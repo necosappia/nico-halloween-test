@@ -9,6 +9,8 @@ export async function POST(req:Request){
  if(b.careerInterest!==undefined&&b.careerInterest!==null&&!(typeof b.careerInterest==='string'&&['enseñar','comunidad','ambas','explorar','no'].includes(b.careerInterest)))return Response.json({error:'Revisá tu interés.'},{status:400});
  if(b.zone!==undefined&&b.zone!==null&&(typeof b.zone!=='string'||b.zone.length>120))return Response.json({error:'Revisá tu zona.'},{status:400});
  if(b.mentorship!==undefined&&typeof b.mentorship!=='boolean')return Response.json({error:'Revisá tus preferencias.'},{status:400});
+ if(b.instagram!==undefined&&b.instagram!==null&&(typeof b.instagram!=='string'||(b.instagram!==''&&!/^@?[A-Za-z0-9_.]{1,30}$/.test(b.instagram))))return Response.json({error:'Revisá tu usuario de Instagram.'},{status:400});
+ if(b.skateType!==undefined&&b.skateType!==null&&!(typeof b.skateType==='string'&&['blanda','extensible-blanda','rigida','sin-patines','no-se'].includes(b.skateType)))return Response.json({error:'Revisá tu tipo de patines.'},{status:400});
  const r=evaluate(b.answers as number[]);
  const url=process.env.SUPABASE_URL;
  const key=process.env.SUPABASE_PUBLISHABLE_KEY;
@@ -16,7 +18,7 @@ export async function POST(req:Request){
  const saved=await fetch(new URL('/rest/v1/halloween_leads',url),{
   method:'POST',
   headers:{'apikey':key,'Content-Type':'application/json','Prefer':'return=minimal'},
-  body:JSON.stringify({id:crypto.randomUUID(),name:b.name.trim(),email:b.email.toLowerCase().trim(),phone:b.phone,answers:b.answers,level:r.level,score:r.score,gift:b.gift,marketing:b.marketing===true,career_interest:b.careerInterest||null,zone:typeof b.zone==='string'?b.zone.trim()||null:null,mentorship_opt_in:b.mentorship===true&&!!b.careerInterest&&b.careerInterest!=='no',consent:true,test_version:'halloween-2026-v4-braking-16'}),
+  body:JSON.stringify({id:crypto.randomUUID(),name:b.name.trim(),email:b.email.toLowerCase().trim(),phone:b.phone,instagram:typeof b.instagram==='string'?b.instagram.replace(/^@/,'')||null:null,skate_type:b.skateType||null,answers:b.answers,level:r.level,score:r.score,gift:b.gift,marketing:b.marketing===true,career_interest:b.careerInterest||null,zone:typeof b.zone==='string'?b.zone.trim()||null:null,mentorship_opt_in:b.mentorship===true&&!!b.careerInterest&&b.careerInterest!=='no',consent:true,test_version:'halloween-2026-v4-braking-16'}),
   signal:AbortSignal.timeout(10000)
  });
  if(!saved.ok)throw new Error('Database insert failed');
