@@ -13,7 +13,7 @@ export async function POST(req:Request){
  const saved=await fetch(new URL('/rest/v1/halloween_leads',url),{
   method:'POST',
   headers:{'apikey':key,'Content-Type':'application/json','Prefer':'return=minimal'},
-  body:JSON.stringify({id:crypto.randomUUID(),name:b.name.trim(),email:b.email.toLowerCase().trim(),phone:b.phone,answers:b.answers,level:r.level,score:r.score,gift:b.gift,marketing:b.marketing===true,consent:true,test_version:'halloween-2026-v2-rigid-14'}),
+  body:JSON.stringify({id:crypto.randomUUID(),name:b.name.trim(),email:b.email.toLowerCase().trim(),phone:b.phone,answers:b.answers,level:r.level,score:r.score,gift:b.gift,marketing:b.marketing===true,consent:true,test_version:'halloween-2026-v4-braking-16'}),
   signal:AbortSignal.timeout(10000)
  });
  if(!saved.ok)throw new Error('Database insert failed');

@@ -12,7 +12,9 @@ export const questions = [
 {icon:'Ⅰ',title:'¿Podés mantener el equilibrio en una sola pierna?',hint:'Sobre los rollers, mientras avanzás en piso plano. ¿Podés sostenerlo con ambas piernas por separado?',options:['Todavía no','Solo unos segundos o solo de un lado','Sí, al menos 10 segundos con cada pierna']},
 {icon:'⟳',title:'¿Rotaste las ruedas alguna vez?',hint:'Nos ayuda a saber qué mantenimiento necesitás aprender.',options:['Nunca / no sé cómo hacerlo','Alguien las rotó por mí','Sí, sé revisar el desgaste y rotarlas']},
 {icon:'⚙',title:'¿Revisaste los tornillos desde que compraste tus rollers?',hint:'Pensá en los ejes de las ruedas y las fijaciones de la guía.',options:['No, nunca los revisé','Los revisé antes, pero no recientemente','Sí, los revisé recientemente o los revisó un técnico']},
-{icon:'◈',title:'¿Cuál de estos tres rollers es de bota rígida?',hint:'Mirá las tres imágenes y elegí una respuesta.',options:['El A','El B','El C','Ninguno']}
+{icon:'◈',title:'¿Cuál de estos tres rollers es de bota rígida?',hint:'Mirá las tres imágenes y elegí una respuesta.',options:['El A','El B','El C','Ninguno']},
+{icon:'◉',title:'¿Qué frenada es esta?',hint:'Mirá la imagen y elegí el nombre de la frenada.',options:['Cuña','Freno en T','Freno de taco','No sé']},
+{icon:'◉',title:'¿Qué frenada es esta?',hint:'Mirá la imagen y elegí el nombre de la frenada.',options:['Cuña','Frenada en T','Freno de taco','No sé']}
 ];
 export function evaluate(a:number[]){
  // El tipo de bota y la rotación no otorgan puntos de habilidad.
@@ -23,5 +25,5 @@ export function evaluate(a:number[]){
  const equipment=a[6]===2;
  const maintenance=a[12]===2;
  const urban=technique&&equipment&&maintenance;
- return {score,level:urban?'urbana':basics?'primeros-pasos':'preparacion',equipment,maintenance,wheelHelp:a[11]!==2,unknownRoller:a[7]===3,urbanTechnique:technique,bootKnowledge:a[13]===3};
+ return {score,level:urban?'urbana':basics?'primeros-pasos':'preparacion',equipment,maintenance,wheelHelp:a[11]!==2,unknownRoller:a[7]===3,urbanTechnique:technique,bootKnowledge:a[13]===3,brakeKnowledge:a[14]===0,tBrakeKnowledge:a[15]===1};
 }
