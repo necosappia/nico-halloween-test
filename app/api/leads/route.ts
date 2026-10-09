@@ -6,6 +6,9 @@ export async function POST(req:Request){
  if(!raw||typeof raw!=="object")return Response.json({error:"Datos inválidos"},{status:400});
  const b=raw as Record<string,unknown>;
  if(typeof b.name!=='string'||b.name.trim().length<2||b.name.length>100||typeof b.email!=='string'||b.email.length>200||!/^\S+@\S+\.\S+$/.test(b.email)||typeof b.phone!=='string'||!/^\+?[\d\s()-]{8,25}$/.test(b.phone)||typeof b.gift!=='string'||!['clase','tutorial'].includes(b.gift)||b.consent!==true||!Array.isArray(b.answers)||b.answers.length!==questions.length||!b.answers.every((n:unknown,i:number)=>Number.isInteger(n)&&Number(n)>=0&&Number(n)<questions[i].options.length)) return Response.json({error:'Revisá tus datos y completá el test.'},{status:400});
+ if(b.careerInterest!==undefined&&b.careerInterest!==null&&!(typeof b.careerInterest==='string'&&['enseñar','comunidad','ambas','explorar','no'].includes(b.careerInterest)))return Response.json({error:'Revisá tu interés.'},{status:400});
+ if(b.zone!==undefined&&b.zone!==null&&(typeof b.zone!=='string'||b.zone.length>120))return Response.json({error:'Revisá tu zona.'},{status:400});
+ if(b.mentorship!==undefined&&typeof b.mentorship!=='boolean')return Response.json({error:'Revisá tus preferencias.'},{status:400});
  const r=evaluate(b.answers as number[]);
  const url=process.env.SUPABASE_URL;
  const key=process.env.SUPABASE_PUBLISHABLE_KEY;
@@ -13,7 +16,7 @@ export async function POST(req:Request){
  const saved=await fetch(new URL('/rest/v1/halloween_leads',url),{
   method:'POST',
   headers:{'apikey':key,'Content-Type':'application/json','Prefer':'return=minimal'},
-  body:JSON.stringify({id:crypto.randomUUID(),name:b.name.trim(),email:b.email.toLowerCase().trim(),phone:b.phone,answers:b.answers,level:r.level,score:r.score,gift:b.gift,marketing:b.marketing===true,consent:true,test_version:'halloween-2026-v4-braking-16'}),
+  body:JSON.stringify({id:crypto.randomUUID(),name:b.name.trim(),email:b.email.toLowerCase().trim(),phone:b.phone,answers:b.answers,level:r.level,score:r.score,gift:b.gift,marketing:b.marketing===true,career_interest:b.careerInterest||null,zone:typeof b.zone==='string'?b.zone.trim()||null:null,mentorship_opt_in:b.mentorship===true&&!!b.careerInterest&&b.careerInterest!=='no',consent:true,test_version:'halloween-2026-v4-braking-16'}),
   signal:AbortSignal.timeout(10000)
  });
  if(!saved.ok)throw new Error('Database insert failed');
