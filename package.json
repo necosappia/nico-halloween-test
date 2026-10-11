@@ -6,19 +6,25 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "admin:test": "playwright test --config playwright.admin.config.ts"
   },
   "dependencies": {
-    "next": "16.3.4",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.117.3",
+    "next": "16.3.8",
     "react": "19.2.6",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "server-only": "0.0.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.64.0",
     "@tailwindcss/postcss": "4.2.1",
-    "tailwindcss": "4.2.1",
-    "typescript": "5.9.3",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3"
+    "@types/react-dom": "19.2.3",
+    "tailwindcss": "4.2.1",
+    "typescript": "5.9.3"
   }
 }
