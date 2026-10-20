@@ -4,8 +4,8 @@ const origin='http://127.0.0.1:3102';
 async function login(page: import('@playwright/test').Page,user='owner') {
   await page.goto('/admin');
   await page.getByLabel('Email',{exact:true}).fill('owner@example.invalid');
-  await page.getByRole('button',{name:'Enviar enlace de acceso',exact:true}).click();
-  await expect(page.getByText('Revisá tu correo. Abrí el enlace en este mismo navegador.')).toBeVisible();
+  await page.getByRole('button',{name:'Enviar código de acceso',exact:true}).click();
+  await expect(page.getByText('Revisá tu correo e ingresá el código. Si recibiste un enlace, abrilo en este mismo navegador.')).toBeVisible();
   const mail=await page.request.get(`http://127.0.0.1:4119/fixture/last-link?user=${user}`);
   await page.goto((await mail.json()).url);
 }

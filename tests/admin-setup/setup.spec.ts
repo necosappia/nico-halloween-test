@@ -6,8 +6,8 @@ test('owner-only setup can confirm email but never grants reading or leaves a se
   expect(denied.status()).toBe(403);
   await page.goto('/admin');
   await page.getByLabel('Email',{exact:true}).fill('owner@example.invalid');
-  await page.getByRole('button',{name:'Enviar enlace de acceso'}).click();
-  await expect(page.getByText('Revisá tu correo. Abrí el enlace en este mismo navegador.')).toBeVisible();
+  await page.getByRole('button',{name:'Enviar código de acceso'}).click();
+  await expect(page.getByText('Revisá tu correo e ingresá el código. Si recibiste un enlace, abrilo en este mismo navegador.')).toBeVisible();
   const mail=await (await page.request.get('http://127.0.0.1:4129/fixture/last-link')).json();
   await page.goto(mail.url);
   await expect(page.getByText('Tu correo quedó confirmado.',{exact:false})).toBeVisible();

@@ -36,3 +36,16 @@ La demo sintética y la propuesta local no forman parte de esta rama.
 `npx playwright test --config playwright.admin-setup.config.ts`.
 Los tests de navegador usan un servidor Auth y registros ficticios locales;
 no acreditan el envío real de email ni sustituyen la prueba final de RLS online.
+
+## Ingreso por código de correo
+
+El dueño puede ingresar el código numérico recibido por email en `/admin`,
+incluso si lo solicitó antes de abrir esta pantalla. La verificación se realiza
+en servidor con `verifyOtp({ email, token, type: "email" })`, seguida de
+`getUser()` y comparación del UUID confirmado configurado. No habilita altas.
+Los códigos se mantienen sólo en memoria del formulario, sin logs ni persistencia.
+Reenviar vuelve a solicitar el correo; Cambiar correo limpia el código. El callback
+Magic Link con PKCE continúa disponible. No cambia plantillas, Auth ni RLS.
+
+`tests/admin/otp.spec.ts` verifica OTP, errores, controles de acceso y pantalla
+móvil con códigos y registros exclusivamente ficticios locales.

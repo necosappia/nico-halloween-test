@@ -36,6 +36,12 @@ const server = http.createServer(async (req,res) => {
     flows.set(lastCode,{challenge:data.code_challenge,callback:url.searchParams.get('redirect_to'),id:owner});
     return send(200,{});
   }
+  if(url.pathname==='/auth/v1/verify'){
+    let raw='';for await(const chunk of req)raw+=chunk;
+    const data=JSON.parse(raw);
+    if(data.email!=='owner@example.invalid'||data.type!=='email'||!['123456','222222'].includes(data.token))return send(403,{code:'otp_expired',msg:'Token has expired or is invalid'});
+    return send(200,session(data.token==='222222'?other:owner));
+  }
   if(url.pathname==='/fixture/last-link'){
     let code=lastCode;
     if(url.searchParams.get('user')==='other'){code=lastCode+'_other';flows.set(code,{...flows.get(lastCode),id:other});}

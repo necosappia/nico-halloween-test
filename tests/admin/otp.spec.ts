@@ -1,0 +1,30 @@
+import { test, expect } from '@playwright/test';
+const origin = 'http://127.0.0.1:3102';
+test('OTP en celular, rechazo, reenvío y cambio de correo', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/admin');
+  await page.getByLabel('Email', { exact: true }).fill('owner@example.invalid');
+  await expect(page.getByLabel('Código de correo')).toBeVisible();
+  await page.getByRole('button', { name: 'Enviar código de acceso', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Cambiar correo' })).toBeVisible();
+  await page.getByLabel('Código de correo').fill('999999');
+  await page.getByRole('button', { name: 'Ingresar con código' }).click();
+  await expect(page.locator('.private-error')).toContainText('incorrecto o venció');
+  await page.getByRole('button', { name: 'Reenviar código' }).click();
+  await expect(page.getByLabel('Código de correo')).toHaveValue('');
+  await page.getByRole('button', { name: 'Cambiar correo' }).click();
+  await expect(page.getByLabel('Email', { exact: true })).toBeEnabled();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: 'artifacts/admin-otp-mobile.png', fullPage: true });
+  await page.getByLabel('Código de correo').fill('123456');
+  await page.getByRole('button', { name: 'Ingresar con código' }).click();
+  await expect(page.getByText('3 envíos registrados')).toBeVisible();
+});
+test('OTP conserva CSRF, correo autorizado y UUID confirmado', async ({ request }) => {
+  const post = (email: string, token: string, source = origin) => request.post('/api/admin/verify', { headers: { origin: source }, data: { email, token } });
+  expect((await post('owner@example.invalid', '123456', 'https://untrusted.invalid')).status()).toBe(403);
+  expect((await post('other@example.invalid', '123456')).status()).toBe(403);
+  expect((await post('owner@example.invalid', 'invalid')).status()).toBe(400);
+  expect((await post('owner@example.invalid', '222222')).status()).toBe(403);
+  expect((await request.get('/api/admin/leads')).status()).toBe(401);
+});

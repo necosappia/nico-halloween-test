@@ -87,12 +87,13 @@ export function adminOrigin() {
   return value;
 }
 
-export async function loginBody(request: Request) {
+export async function loginBody(request: Request, verify = false) {
   if (!request.headers.get("content-type")?.startsWith("application/json") || Number(request.headers.get("content-length") ?? 0) > 1000) throw new AdminError(400, "Solicitud no válida.");
   const text = await request.text();
   if (text.length > 1000) throw new AdminError(400, "Solicitud no válida.");
-  let body: { email?: unknown };
+  let body: { email?: unknown; token?: unknown };
   try { body = JSON.parse(text); } catch { throw new AdminError(400, "Solicitud no válida."); }
   if (!body || typeof body.email !== "string" || body.email.length > 254 || body.email.trim().toLowerCase() !== ownerEmail()) throw new AdminError(403, "Esta cuenta no tiene acceso al panel.");
-  return { email: ownerEmail() };
+  if (verify && (typeof body.token !== "string" || !/^[0-9]{6,10}$/.test(body.token))) throw new AdminError(400, "Ingresá el código numérico que recibiste por correo.");
+  return { email: ownerEmail(), token: verify ? body.token as string : undefined };
 }

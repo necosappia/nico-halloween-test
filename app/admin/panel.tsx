@@ -16,6 +16,8 @@ export default function AdminPanel() {
   const [selected, setSelected] = useState<string | null>(null);
   const [loginEmail, setLoginEmail] = useState(""), [linkSent, setLinkSent] = useState(false), [accessNotice, setAccessNotice] = useState("");
   const request = useRef<AbortController | null>(null);
+  const authPending = useRef(false);
+  const [code, setCode] = useState("");
 
   const load = useCallback(async (offset = 0) => {
     request.current?.abort();
@@ -48,15 +50,21 @@ export default function AdminPanel() {
     return () => { request.current?.abort(); window.removeEventListener("pageshow", restore); };
   }, [load]);
 
-  async function login(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setBusy(true); setError("");
-    setAccessNotice("");
+  async function authenticate(verify: boolean) {
+    if (authPending.current || busy) return;
+    authPending.current = true; setBusy(true); setError(""); setAccessNotice("");
     try {
-      const response = await fetch("/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: loginEmail }) });
+      const response = await fetch(verify ? "/api/admin/verify" : "/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: loginEmail, ...(verify ? { token: code.trim() } : {}) }) });
       const body = await response.json();
-      if (!response.ok) { setError(body.error); setBusy(false); return; }
-      setLinkSent(true); setBusy(false);
-    } catch { setError("No se pudo conectar. Reintentá."); setBusy(false); }
+      if (!response.ok) { setError(body.error || "No se pudo completar el acceso."); return; }
+      setCode("");
+      if (verify) await load();
+      else setLinkSent(true);
+    } catch { setError("No se pudo conectar. Reintentá."); }
+    finally { authPending.current = false; setBusy(false); }
+  }
+  async function login(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault(); await authenticate(false);
   }
   async function logout() {
     request.current?.abort(); setLeads([]); setSelected(null); setSession(false); setBusy(true); setError("");
@@ -74,7 +82,11 @@ export default function AdminPanel() {
     <header className="private-header"><div><p className="private-kicker">NICO SAPPIA · HALLOWEEN</p><h1>Tu panel privado</h1><p>Respuestas completas. Una persona, un recorrido.</p></div><span className="private-badge">Acceso exclusivo</span></header>
     {error && <p className="private-error" role="alert">{error}</p>}
     {accessNotice && !session && <p className="private-warning" role="status">{accessNotice}</p>}
-    {!session ? <section className="private-login"><p className="private-kicker">SÓLO NICO</p><h2>Entrá para revisar</h2><p>{linkSent ? "Revisá tu correo. Abrí el enlace en este mismo navegador." : "Te enviamos un enlace de acceso a tu correo habilitado."}</p><form onSubmit={login}><label>Email<input name="email" type="email" autoComplete="username" maxLength={254} required disabled={busy} value={loginEmail} onChange={e => setLoginEmail(e.target.value)}/></label><button className="private-primary" disabled={busy}>{busy ? "Comprobando acceso…" : linkSent ? "Enviar otro enlace" : "Enviar enlace de acceso"}</button></form><p className="private-muted">Las respuestas se cargan después de verificar tu cuenta.</p>{error.includes("cerrar") && <button onClick={logout} disabled={busy}>Cerrar sesión</button>}</section> : <>
+    {!session ? <section className="private-login"><p className="private-kicker">SÓLO NICO</p><h2>Entrá para revisar</h2><p>{linkSent ? "Revisá tu correo e ingresá el código. Si recibiste un enlace, abrilo en este mismo navegador." : "Pedí un código o ingresá el que ya recibiste en tu correo habilitado."}</p>
+      <form onSubmit={login}><label>Email<input name="email" type="email" autoComplete="username" maxLength={254} required disabled={busy || linkSent} value={loginEmail} onChange={e => setLoginEmail(e.target.value)}/></label><button className="private-primary" disabled={busy}>{busy ? "Comprobando acceso…" : linkSent ? "Reenviar código" : "Enviar código de acceso"}</button></form>
+      <form onSubmit={event => { event.preventDefault(); void authenticate(true); }}><label>Código de correo<input name="code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" minLength={6} maxLength={10} required disabled={busy} value={code} onChange={e => setCode(e.target.value.replace(/[^0-9]/g, ""))}/></label><button className="private-primary" disabled={busy || !loginEmail.trim() || code.length < 6}>{busy ? "Comprobando acceso…" : "Ingresar con código"}</button></form>
+      {linkSent && <button disabled={busy} onClick={() => { setLinkSent(false); setCode(""); setError(""); setAccessNotice(""); }}>Cambiar correo</button>}
+      <p className="private-muted">Las respuestas se cargan después de verificar tu cuenta.</p>{error.includes("cerrar") && <button onClick={logout} disabled={busy}>Cerrar sesión</button>}</section> : <>
       <div className="private-toolbar"><p><strong>{total}</strong> envíos registrados <span className="private-muted">· no equivale a personas únicas</span></p><div><button onClick={() => load()} disabled={busy}>{busy ? "Actualizando…" : "Actualizar"}</button><button onClick={logout} disabled={busy}>Cerrar sesión</button></div></div>
       <section className="private-filters" aria-label="Filtrar envíos"><label>Buscar<input type="search" placeholder="Nombre, contacto o zona" value={query} onChange={e => setQuery(e.target.value)}/></label><label>Versión<select value={version} onChange={e => setVersion(e.target.value)}><option value="all">Todas las versiones</option>{[...new Set(leads.map(row => row.test_version))].sort().map(v => <option key={v} value={v}>{historicalVersions[v]?.label ?? v}</option>)}</select></label><label>Resultado<select value={level} onChange={e => setLevel(e.target.value)}><option value="all">Todos los resultados</option>{Object.entries(levelLabels).map(([id, label]) => <option value={id} key={id}>{label}</option>)}</select></label><button onClick={() => { setQuery(""); setVersion("all"); setLevel("all"); }}>Limpiar filtros</button></section>
       <p className="private-muted" role="status">{filtered.length} de {leads.length} envíos cargados. Origen sin clasificar: la base no distingue pruebas de participaciones.</p>

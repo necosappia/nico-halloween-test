@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     // A temporary operator flag can provision only the configured owner inbox.
     // No reader accepts email as authorization; it always requires the pinned UUID.
     const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: setup, emailRedirectTo: `${adminOrigin()}/api/admin/callback` } });
-    if (error) throw new AdminError(error.status === 429 ? 429 : 503, error.status === 429 ? "Esperá un minuto antes de pedir otro enlace." : "No se pudo enviar el enlace. Revisá la habilitación del acceso.");
+    if (error) throw new AdminError(error.status === 429 ? 429 : 503, error.status === 429 ? "Esperá un minuto antes de pedir otro código." : "No se pudo enviar el código. Revisá la habilitación del acceso.");
     return reply({ ok: true });
   } catch (error) { return failure(error); }
 }
